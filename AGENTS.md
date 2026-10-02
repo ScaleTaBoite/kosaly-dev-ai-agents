@@ -1,0 +1,32 @@
+# Engineering Harness — guide agent (maintenance de ce repo)
+
+Tu travailles dans le **socle Engineering Harness** ScaleTaBoite, pas dans un projet client.
+
+## Principes
+
+1. Une source de verite par type de contenu : standards vs rules vs skills vs workflows.
+2. Contexte minimal : lire uniquement les fichiers pertinents a la tache.
+3. Pas de decision architecturale silencieuse : ADR / Change Brief dans le **repo projet**.
+4. Preferer un script deterministe a un raisonnement LLM pour les verifications repetables.
+
+## Gouvernance
+
+Respecter `governance/actions.yaml`. En cas de doute sur une action sensible, **proposer** et attendre validation humaine.
+
+## Ou trouver quoi
+
+| Besoin | Emplacement |
+|--------|-------------|
+| Normes entreprise | `standards/` (via skill ou demande explicite) |
+| Regles courtes | `rules/` |
+| Procedure | `skills/<nom>/SKILL.md` |
+| Role specialise | `agents/` |
+| Type de travail | `workflows/` + `workflows/impact-levels.yaml` |
+| Artefacts projet | `templates/project/` (a copier, pas a remplir ici) |
+| Cursor | `adapters/cursor/` |
+
+## Modifier ce repo
+
+- Ne pas dupliquer un standard entier dans `rules/` ou `AGENTS.md` : renvoyer vers `standards/`.
+- Nouvelle skill = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
+- Adapter Cursor = symlinks/copies via `adapters/cursor/install.sh`, pas de canon dans `.cursor/` a la racine.

@@ -1,0 +1,36 @@
+# Matrice de gouvernance — Engineering Harness
+# Niveaux : automatic | propose | human_required | forbidden
+
+categories:
+  automatic:
+    description: L'agent peut executer sans validation prealable.
+    examples:
+      - Lire le code et la documentation du repo
+      - Executer les scripts de validation du harness (scripts/)
+      - Corriger typos dans docs/harness sans changement de gouvernance
+      - Ajouter ou ajuster rules/skills/workflows dans ce repo apres validation humaine du PR
+
+  propose:
+    description: L'agent prepare le changement ; merge ou application apres revue humaine.
+    examples:
+      - Nouvelle rule ou skill
+      - Modification de standards/
+      - Refactoring structurel du harness
+      - Change Brief ou ADR draft (dans le repo projet)
+
+  human_required:
+    description: Validation humaine explicite avant execution ou deploiement.
+    examples:
+      - Decision d'architecture (ADR acceptee)
+      - Schema BDD significatif ou migration destructive
+      - Permissions, securite, donnees sensibles
+      - Production, suppression de donnees
+      - Release semver du harness (tag VERSION)
+
+  forbidden:
+    description: Interdit pour tout agent en conditions normales.
+    examples:
+      - Acces direct a la production ou secrets live
+      - push --force sur main
+      - Contourner hooks ou CI
+      - Centraliser STATE/schema d'un projet client dans ce repo

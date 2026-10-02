@@ -1,0 +1,47 @@
+# Niveaux d'impact — etapes obligatoires (+) ou optionnelles (-)
+
+levels:
+  L0:
+    label: Bug local / typo / pas d'impact archi ou BDD
+    workflow: bug-local.md
+    required:
+      - developer
+    optional:
+      - reviewer
+    human_validation: false
+
+  L1:
+    label: Feature localisee
+    workflow: new-feature.md
+    required:
+      - developer
+      - reviewer
+    optional:
+      - architect
+    human_validation: false
+
+  L2:
+    label: BDD, API ou transversal
+    workflow: new-feature.md
+    required:
+      - architect
+      - database-architect
+      - change-brief
+      - developer
+      - reviewer
+      - checklist_catalyst
+    optional: []
+    human_validation: propose
+
+  L3:
+    label: Architecture, migration destructive, permissions, securite
+    workflow: new-feature.md
+    required:
+      - architect
+      - database-architect
+      - adr
+      - change-brief
+      - developer
+      - reviewer
+    optional: []
+    human_validation: true
