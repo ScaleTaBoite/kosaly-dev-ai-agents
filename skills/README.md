@@ -2,10 +2,19 @@
 
 Une procedure = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
 
-Skills prevues (contenu a venir) :
+## Architect / Spec (implementees)
 
-- `audit-repository/`
+| Skill | Role |
+|-------|------|
+| `feature-analysis/` | Demande feature ou modification fonctionnelle |
+| `audit-repository/` | Cartographie projet existant |
+| `architecture-impact/` | Impacts et niveau L0–L3 |
+| `write-change-brief/` | Change Brief dans le repo projet |
+
+Role canonique : `agents/architect.md`.
+
+## A venir (hors perimetre actuel)
+
 - `write-adr/`
-- `write-change-brief/`
-- `catalyst-impact/`
+- `catalyst-impact/` (analyse detaillee)
 - `init-project-artifacts/`
