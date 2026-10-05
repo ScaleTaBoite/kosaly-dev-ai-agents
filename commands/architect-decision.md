@@ -1,5 +1,8 @@
 ---
 description: Architect — enregistrer une decision humaine explicitement fournie
+agent: architect
+mode: Décision humaine
+triggers: enregistre cette décision d'architecture
 ---
 Lis `agents/architect.md`.
 

@@ -1,99 +1,101 @@
-# ScaleTaBoite Engineering Harness
+# KAgents
 
-Socle interne versionné pour faire travailler des agents IA (Cursor, Claude Code, etc.) de manière cohérente sur plusieurs projets.
+Kit d'agents IA d'ingénierie, installable dans n'importe quel projet. Il fonctionne avec Claude Code, Cursor et tout outil qui lit `AGENTS.md`.
 
-Le **projet client** porte son état et ses décisions (`STATE.md`, schéma, ADR, `.kagents/docs/`, etc.).  
-Ce dépôt fournit règles, skills, workflows, templates, commandes `kagents` et garde-fous — **sans** dupliquer le métier ni le code applicatif du client.
-
-Guide de maintenance de ce repo : [AGENTS.md](AGENTS.md).
+- **Agent** : qui (identité, règles, modes).
+- **Skill** : comment (procédure réutilisable).
+- **Commande** : point d'entrée qui lance un agent dans un mode.
 
 ## Principes
 
-1. **Une source de vérité par type** — standards vs rules vs skills vs workflows vs agents.
-2. **Contexte minimal** — lire uniquement ce qui sert la tâche.
-3. **Proposition ≠ décision** — une recommandation Architect reste une proposition tant qu’un humain ne l’a pas enregistrée (`architect:decision`).
-4. **Adapter, pas copier le canon** — le harness n’est pas versionné dans le repo client ; l’installation crée des liens symboliques.
-
-## Structure du harness
-
-| Dossier | Rôle |
-|---------|------|
-| `governance/` | Matrice auto / proposition / validation humaine / interdit |
-| `standards/` | Référence entreprise (chargée à la demande) |
-| `rules/` | Règles courtes actionnables |
-| `skills/` | Procédures spécialisées (`SKILL.md`) |
-| `agents/` | Rôles canoniques (indépendants de l’IDE) |
-| `workflows/` | Enchaînements et niveaux d’impact |
-| `commands/` | Entrées utilisateur `kagents` (Architect, Base) |
-| `templates/` | Formats à copier ou à lier dans un repo projet |
-| `checklists/` | Contrôles de revue |
-| `scripts/` | Vérifications déterministes |
-| `adapters/` | Intégration par environnement (Cursor, etc.) |
-| `docs/` | Documentation humaine |
-
-Documentation utile :
-
-- [docs/overview.md](docs/overview.md) — canon vs projet
-- [docs/conventions.md](docs/conventions.md) — nommage et frontières
-- [docs/architect-commands.md](docs/architect-commands.md) — contrat des commandes Architect
+1. **Une source de vérité par type** : agents, skills, commandes, workflows, standards.
+2. **Contexte minimal** : lire uniquement ce qui sert la tâche.
+3. **Proposition ≠ décision** : une recommandation de l'Architect reste une proposition tant qu'un humain ne l'a pas enregistrée (`/architect-decision`).
+4. **Source unique** : tout vit dans `.kagents/` ; les dossiers des outils ne contiennent que des liens relatifs.
+5. **Chaque agent n'écrit que dans son espace** : `.kagents/docs/<agent>-docs/`.
 
 ## Agents et commandes
 
-Les commandes publiques sont définies dans `commands/*.md`. Les skills correspondantes restent **internes** (non exposées comme CLI).
+Les commandes sont définies dans `commands/*.md`. Les skills correspondantes sont internes : on invoque une commande, pas une skill.
 
-### Architect / Spec
+### Architect
 
-Racine officielle : **`kagents architect`** (pas `kagents architecture`).
+Comprend l'architecture, prépare les changements et laisse des livrables persistants. Contrat complet : [docs/architect-commands.md](docs/architect-commands.md). Rôle : [agents/architect.md](agents/architect.md).
 
 | Commande | Rôle |
 |----------|------|
-| `kagents architect` | Architecture **observée** (existant) |
-| `kagents architect:impact "<demande>"` | Impact d’une évolution (L0–L3 Architect) |
-| `kagents architect:spec "<fonctionnalité>"` | Spécification exploitable |
-| `kagents architect:design "<objectif>"` | Architecture **cible** (proposition) |
-| `kagents architect:audit [scope]` | Audit documentaire / structure |
-| `kagents architect:status` | **État du projet** — lecture INDEX, décisions, propositions (read-only) |
-| `kagents architect:decision "<texte>"` | **Décision humaine** enregistrée (`decisions/DEC-XXX-*.md`) |
+| `/architect` | Architecture **observée** (existant) |
+| `/architect-impact "<demande>"` | Impact d'une évolution (L0–L3) |
+| `/architect-spec "<fonctionnalité>"` | Spécification exploitable |
+| `/architect-design "<objectif>"` | Architecture **cible** (proposition) |
+| `/architect-audit [scope]` | Audit de l'architecture existante |
+| `/architect-status` | État du projet, en lecture seule |
+| `/architect-decision "<texte>"` | Décision **humaine** enregistrée (`decisions/DEC-XXX-*.md`) |
 
-Extension préparée : `kagents architect:compare` (stub).
+`/architect-compare` est préparée mais pas encore implémentée.
 
-Rôle canon : [agents/architect.md](agents/architect.md).
+### Base
 
-### Database Architect (Base)
+Conçoit, audite et fait évoluer la base de données. Rôle : [agents/database_expert.md](agents/database_expert.md).
 
-Hors périmètre des évolutions Architect ci-dessus. Commandes : `base-audit`, `base-design`, `base-evolve` — voir `commands/base-*.md` et [agents/database_expert.md](agents/database_expert.md).
+| Commande | Rôle |
+|----------|------|
+| `/base-design` | Modèle de données d'un nouveau projet |
+| `/base-audit` | Audit d'une base existante |
+| `/base-evolve` | Impact d'une fonctionnalité sur la base |
 
-## Espace documentaire projet (`.kagents/docs/`)
+## Installation dans un projet
 
-Installé par [adapters/cursor/install.sh](adapters/cursor/install.sh) dans le **repo client** :
+Prérequis : Node 18 ou plus. Depuis la racine du projet :
+
+```bash
+npx @dev-kosaly/kagents            # ou : pnpm dlx @dev-kosaly/kagents
+npx @dev-kosaly/kagents --tools claude,cursor,agents
+npx @dev-kosaly/kagents --copy     # copies au lieu de liens (utile sous Windows)
+npx @dev-kosaly/kagents uninstall
+```
+
+Par défaut, le kit détecte les outils présents (`.claude/`, `.cursor/`) et branche aussi `.agents/skills/`.
+
+Ce que fait l'installation :
+- Le kit est copié dans `.kagents/`. `.claude/`, `.cursor/` et `.agents/` ne contiennent que des liens relatifs.
+- Le bloc `<!-- kagents:start/end -->` de `AGENTS.md` est régénéré (mode d'emploi, agents, routage). Le reste du fichier n'est jamais modifié.
+- Un fichier existant qui n'est pas géré par KAgents n'est jamais écrasé.
+
+**Mise à jour** : relancer avec `@latest`. Les fichiers du kit dans `.kagents/` sont régénérés (ne pas les éditer). `.kagents/docs/`, qui contient les livrables des agents et `knowledge/context.md`, n'est jamais touché.
+
+### Espace documentaire du projet
 
 ```text
 .kagents/docs/
 ├── architect-docs/
-│   ├── INDEX.md              # registre de navigation
-│   ├── outputs/              # livrables (architecture, features, impacts, specs, designs, audits)
-│   ├── decisions/              # DEC-001, DEC-002, … (décisions validées / rejetées / remplacées)
-│   └── proposals/              # propositions Architect (historique, non supprimées)
-├── base-docs/                  # réservé Database Architect
+│   ├── INDEX.md          # registre de navigation
+│   ├── outputs/          # livrables (architecture, features, impacts, specs, designs, audits)
+│   ├── decisions/        # DEC-001, DEC-002… (validées, rejetées ou remplacées)
+│   └── proposals/        # propositions de l'Architect (historique conservé)
+├── base-docs/            # livrables de Base (db/)
 └── knowledge/
-    └── context.md              # intention projet (local, non écrasé à l’install)
+    └── context.md        # intention du projet (écrit par l'utilisateur, jamais écrasé)
 ```
 
-Ne pas éditer les fichiers **liés** depuis le client : modifier le harness puis relancer l’install.
+## Structure du dépôt
 
-## Consommation dans un projet
+| Dossier | Rôle |
+|---------|------|
+| `bin/kagents.js` | Installateur (Node, sans dépendance) |
+| `agents/` | Les agents |
+| `skills/` | Les procédures (`SKILL.md`) |
+| `commands/` | Les points d'entrée (préfixe par agent : `base-*`, `architect*`) |
+| `workflows/` | Enchaînements et niveaux d'impact |
+| `templates/` | Formats de livrables (ADR, décisions, spécifications…) |
+| `rules/` | Règles courtes actionnables |
+| `checklists/`, `governance/` | Contrôles de revue et matrice des actions sensibles |
+| `docs/` | Contrat des commandes Architect |
+| `adapters/` | Documentation des outils pris en charge |
+| `scripts/` | Test de fumée de l'installateur |
 
-1. Placer le harness (submodule ou copie) et définir `HARNESS_ROOT`.
-2. Depuis la racine du repo projet :
+Voir [adapters/README.md](adapters/README.md). Développement : `npm test`.
 
-```bash
-HARNESS_ROOT=chemin/vers/engineering-harness ./chemin/vers/engineering-harness/adapters/cursor/install.sh
-```
+## Licence
 
-3. Travailler via les commandes `kagents` et les rèles dans `.cursor/` (liens vers le canon).
-
-Détails Cursor : [adapters/cursor/README.md](adapters/cursor/README.md).
-
-## Version
-
-Voir [VERSION](VERSION). Tag semver sur `main` à chaque release du harness.
+Usage libre, modification interdite. Voir [LICENSE](LICENSE).

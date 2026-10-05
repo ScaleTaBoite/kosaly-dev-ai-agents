@@ -1,5 +1,8 @@
 ---
 description: Architect — comparer des options (extension future)
+agent: architect
+mode: Comparaison (non implémenté)
+triggers: compare ces options d'architecture
 ---
 **Extension preparee — non implementee.**
 

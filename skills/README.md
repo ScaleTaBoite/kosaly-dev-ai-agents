@@ -16,6 +16,13 @@ Contrat commandes : `docs/architect-commands.md` — fichiers `commands/architec
 
 Role : `agents/architect.md`.
 
-## Base (Database Expert) — ne pas modifier ici
+## Base (base de données)
 
-`db-analysis/`, `db-docs/`, `schema-exploration/`, `catalyst-export/`.
+| Skill | Rôle |
+|-------|------|
+| `schema-exploration/` | Explorer le repo et reconstruire le modèle |
+| `catalyst-export/` | Exploiter l'export JSON Catalyst |
+| `db-analysis/` | Grille d'analyse et sévérités |
+| `db-docs/` | Modèles des fichiers de `base-docs/db/` |
+
+Agent : `agents/database_expert.md`.

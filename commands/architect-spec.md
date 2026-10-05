@@ -1,5 +1,8 @@
 ---
 description: Architect — formaliser une fonctionnalite en specification
+agent: architect
+mode: Spécification
+triggers: spécifie cette fonctionnalité, rédige la spec
 ---
 Lis le role Architect.
 

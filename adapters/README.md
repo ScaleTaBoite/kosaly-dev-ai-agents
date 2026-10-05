@@ -1,9 +1,13 @@
-# Adapters
+# Outils pris en charge
 
-Couche d'integration par environnement. Le canon reste a la racine du harness (`rules/`, `skills/`, `agents/`).
+Déclarés dans `ADAPTERS` de `bin/kagents.js`. Le kit est copié dans `.kagents/` ; chaque outil reçoit des **liens relatifs** (des copies avec `--copy`, ou si les liens sont impossibles). Ce que KAgents place est listé dans `.kagents/.installed`.
 
-| Adapter | Statut |
-|---------|--------|
-| `cursor/` | Cursor IDE |
+| Outil | Placé dans le projet |
+|-------|----------------------|
+| `claude` | `.claude/commands`, `skills`, `agents` |
+| `cursor` | `.cursor/commands`, `skills`, `agents` |
+| `agents` | `.agents/skills` (standard ouvert ; toujours installé en mode `auto`) |
 
-Autres adapters (Claude Code, etc.) : a ajouter sans dupliquer le canon.
+Les agents sans frontmatter `name:` ne sont pas exposés aux outils.
+
+Ajouter un outil : une entrée dans `ADAPTERS` (`[dossier du kit, destination, files|dirs|agents]`), puis mettre ce tableau à jour.

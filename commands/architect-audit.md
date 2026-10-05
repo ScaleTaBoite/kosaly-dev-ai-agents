@@ -1,5 +1,8 @@
 ---
 description: Architect — auditer l'architecture existante
+agent: architect
+mode: Audit
+triggers: audite l'architecture existante
 ---
 Lis le role Architect.
 

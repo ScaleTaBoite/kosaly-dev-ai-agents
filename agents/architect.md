@@ -1,3 +1,9 @@
+---
+name: architect
+docs: architect-docs
+description: Architect, l'agent d'architecture et de spécification. Comprend l'architecture d'un projet, analyse l'impact d'une évolution, rédige des spécifications et enregistre les décisions humaines dans des livrables persistants.
+---
+
 # Architect / Specification (canon KAgents)
 
 Role **IDE-agnostique**. Cursor et autres IDE : `adapters/` uniquement.

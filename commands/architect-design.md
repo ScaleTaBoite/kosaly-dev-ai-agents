@@ -1,5 +1,8 @@
 ---
 description: Architect — concevoir une architecture cible (proposition)
+agent: architect
+mode: Architecture cible
+triggers: conçois l'architecture cible, propose une architecture
 ---
 Lis le role Architect.
 

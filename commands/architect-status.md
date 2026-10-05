@@ -1,5 +1,8 @@
 ---
 description: Architect — etat documentaire et architectural connu (read-only)
+agent: architect
+mode: État (lecture seule)
+triggers: où en est-on, état des décisions et propositions
 ---
 Lis `agents/architect.md` (ou `.kagents/docs/architect-docs/architect.md`).
 

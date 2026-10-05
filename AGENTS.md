@@ -4,7 +4,7 @@ Tu travailles dans le **socle Engineering Harness** ScaleTaBoite, pas dans un pr
 
 ## Principes
 
-1. Une source de verite par type de contenu : standards vs rules vs skills vs workflows.
+1. Une source de verite par type de contenu : agents (qui), skills (comment), commandes (point d'entree).
 2. Contexte minimal : lire uniquement les fichiers pertinents a la tache.
 3. Pas de decision architecturale silencieuse : ADR / Change Brief dans le **repo projet**.
 4. Preferer un script deterministe a un raisonnement LLM pour les verifications repetables.
@@ -17,16 +17,14 @@ Respecter `governance/actions.yaml`. En cas de doute sur une action sensible, **
 
 | Besoin | Emplacement |
 |--------|-------------|
-| Normes entreprise | `standards/` (via skill ou demande explicite) |
-| Regles courtes | `rules/` |
 | Procedure | `skills/<nom>/SKILL.md` |
 | Role specialise | `agents/` |
-| Type de travail | `workflows/` + `workflows/impact-levels.yaml` |
-| Artefacts projet | `templates/project/` (a copier, pas a remplir ici) |
-| Cursor | `adapters/cursor/` |
+| Type de travail | `workflows/impact-levels.yaml` (Architect) |
+| Installation | `bin/kagents.js` (table `ADAPTERS`), `scripts/smoke-test.js` |
+| Commandes | `commands/` (prefixe par agent : `base-*`) |
 
 ## Modifier ce repo
 
-- Ne pas dupliquer un standard entier dans `rules/` ou `AGENTS.md` : renvoyer vers `standards/`.
 - Nouvelle skill = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
-- Adapter Cursor = symlinks/copies via `adapters/cursor/install.sh`, pas de canon dans `.cursor/` a la racine.
+- Nouvel outil = une entree dans `ADAPTERS` de `bin/kagents.js` (liens relatifs depuis `.kagents/`), pas de canon dans `.cursor/` ou `.claude/` a la racine. Lancer `npm test` apres toute modification de l'installateur.
+- Agent = frontmatter `name`, `docs` (espace `docs/<agent>-docs/`), `description` ; commande = frontmatter `description`, `agent`, `mode`, `triggers`.

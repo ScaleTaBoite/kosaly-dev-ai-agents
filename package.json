@@ -1,0 +1,36 @@
+{
+  "name": "@dev-kosaly/kagents",
+  "version": "0.1.1",
+  "description": "Kit d'agents IA d'ingénierie installable dans un projet (Claude Code, Cursor, AGENTS.md)",
+  "bin": {
+    "kagents": "bin/kagents.js"
+  },
+  "files": [
+    "bin",
+    "agents",
+    "skills",
+    "commands",
+    "rules",
+    "templates",
+    "checklists",
+    "workflows",
+    "governance",
+    "docs"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["ai", "agents", "claude-code", "cursor", "agents-md", "database"],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ScaleTaBoite/kosaly-dev-ai-agents.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node scripts/smoke-test.js",
+    "prepublishOnly": "npm test"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}
