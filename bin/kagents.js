@@ -11,19 +11,21 @@ const PKG = JSON.parse(fs.readFileSync(path.join(PKG_ROOT, 'package.json'), 'utf
 const KIT_DIRS = ['agents', 'skills', 'commands', 'rules', 'templates', 'checklists', 'workflows', 'governance', 'docs'];
 const SKIP = new Set(['README.md', '.gitkeep']);
 const BLOCK_RE = /<!-- kagents:start -->[\s\S]*?<!-- kagents:end -->/;
+const GITIGNORE_RE = /# kagents:start\n[\s\S]*?# kagents:end\n?/;
+// On ignore le kit (régénérable) mais pas docs/ : livrables et contexte sont à versionner.
 
 // Adaptateurs : un outil = une liste [dossier du kit, destination, type].
 // type : files (fichiers), dirs (dossiers), agents (fichiers .md avec `name:`).
+// Les skills ne sont volontairement PAS liées dans .claude/ ni .cursor/ : ces outils les listeraient
+// comme commandes `/`. Les agents et commandes les chargent par chemin depuis .kagents/skills/.
 const ADAPTERS = {
   agents: [['skills', '.agents/skills', 'dirs']],
   claude: [
     ['commands', '.claude/commands', 'files'],
-    ['skills', '.claude/skills', 'dirs'],
     ['agents', '.claude/agents', 'agents'],
   ],
   cursor: [
     ['commands', '.cursor/commands', 'files'],
-    ['skills', '.cursor/skills', 'dirs'],
     ['agents', '.cursor/agents', 'agents'],
     ['rules/global', '.cursor/rules', 'files'],
     ['rules/domains', '.cursor/rules', 'files'],
@@ -266,6 +268,23 @@ Document partagé, écrit par l'utilisateur. Les agents le lisent, ne l'écriven
     fs.writeFileSync(file, out);
   }
 
+  // Bloc .gitignore : le kit et les liens que l'on a posés, jamais docs/ (sauf les fichiers du kit qui s'y trouvent).
+  gitignoreBlock() {
+    const extra = this.entries.filter((e) => !e.startsWith('.kagents/') || e.startsWith('.kagents/docs/')).sort();
+    return ['# kagents:start', '.kagents/*', '!.kagents/docs/', ...extra, '# kagents:end'].join('\n') + '\n';
+  }
+
+  writeGitignore() {
+    const file = path.join(this.target, '.gitignore');
+    if (!fs.existsSync(file) && !fs.existsSync(path.join(this.target, '.git'))) return;
+    const cur = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+    const block = this.gitignoreBlock();
+    const out = GITIGNORE_RE.test(cur)
+      ? cur.replace(GITIGNORE_RE, () => block)
+      : (cur && !cur.endsWith('\n') ? cur + '\n' : cur) + (cur ? '\n' : '') + block;
+    fs.writeFileSync(file, out);
+  }
+
   resolveTools(tools) {
     if (tools !== 'auto') return tools.split(',').filter(Boolean);
     const t = ['agents'];
@@ -326,6 +345,7 @@ Document partagé, écrit par l'utilisateur. Les agents le lisent, ne l'écriven
     this.createDocs();
     this.writeAgentsMd();
     this.runAdapters(tools);
+    this.writeGitignore();
     this.saveManifest();
     log(`installé dans ${this.kagents} (${this.copy ? 'copies' : 'liens'})`);
   }
@@ -340,6 +360,12 @@ Document partagé, écrit par l'utilisateur. Les agents le lisent, ne l'écriven
         if (out) fs.writeFileSync(file, out + '\n');
         else fs.rmSync(file);
       }
+    }
+    const gi = path.join(this.target, '.gitignore');
+    if (fs.existsSync(gi) && GITIGNORE_RE.test(fs.readFileSync(gi, 'utf8'))) {
+      const out = fs.readFileSync(gi, 'utf8').replace(GITIGNORE_RE, '').replace(/\n{3,}/g, '\n\n').replace(/\s+$/, '');
+      if (out) fs.writeFileSync(gi, out + '\n');
+      else fs.rmSync(gi);
     }
     fs.rmSync(this.manifest, { force: true });
     this.prune(removed);

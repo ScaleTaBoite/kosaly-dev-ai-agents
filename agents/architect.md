@@ -116,7 +116,7 @@ Handoff Developer : perimetre implementation **apres** validations ; ne pas defi
 | `agents/architect.md` | Qui, limites, modes, principes |
 | `rules/domains/architect-invariants.md` | Invariants non negociables |
 | `rules/domains/architect-chat.md` | Contrat de sortie conversationnelle |
-| `skills/architect-*` | Procedures |
+| `skills/architect-*` | Procedures (installées dans `.kagents/skills/<nom>/SKILL.md` : les charger par ce chemin) |
 | `workflows/architect-*.md` | Enchainement |
 | `templates/architect-output/` | Structure livrable |
 | `commands/architect*.md` | Entrees explicites |

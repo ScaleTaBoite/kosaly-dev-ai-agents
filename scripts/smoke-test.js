@@ -48,6 +48,7 @@ try {
   fs.mkdirSync(p('.claude', 'commands'), { recursive: true });
   fs.mkdirSync(p('.cursor'));
   fs.writeFileSync(p('AGENTS.md'), '# Mon projet\n\nTexte utilisateur.\n');
+  fs.writeFileSync(p('.gitignore'), 'node_modules\n');
   fs.writeFileSync(p('.claude', 'commands', 'base-audit.md'), 'mine');
 
   test('installation (auto)', () => {
@@ -61,6 +62,11 @@ try {
     assert(s.startsWith('# Mon projet\n\nTexte utilisateur.'));
     assert(s.includes('`/base-audit`') && s.includes('`/architect-impact`'));
     assert.strictEqual(s.split('<!-- kagents:start -->').length, 2);
+  });
+  test('.gitignore : kit ignoré, docs/ versionné, une seule fois', () => {
+    const g = fs.readFileSync(p('.gitignore'), 'utf8');
+    assert(g.startsWith('node_modules\n') && g.includes('.kagents/*\n!.kagents/docs/'));
+    assert.strictEqual(g.split('# kagents:start').length, 2);
   });
   test('fichier utilisateur jamais écrasé', () => {
     assert.strictEqual(fs.readFileSync(p('.claude', 'commands', 'base-audit.md'), 'utf8'), 'mine');
@@ -80,6 +86,7 @@ try {
     assert(!fs.existsSync(p('.kagents', 'agents')) && !fs.existsSync(p('.agents')));
     assert(fs.existsSync(p('.kagents', 'docs', 'base-docs', 'INDEX.md')));
     assert.strictEqual(fs.readFileSync(p('AGENTS.md'), 'utf8'), '# Mon projet\n\nTexte utilisateur.\n');
+    assert.strictEqual(fs.readFileSync(p('.gitignore'), 'utf8'), 'node_modules\n');
     assert.strictEqual(fs.readFileSync(p('.claude', 'commands', 'base-audit.md'), 'utf8'), 'mine');
     assert(fs.existsSync(p('.claude')) && fs.existsSync(p('.cursor')));
   });
@@ -95,6 +102,25 @@ try {
     walk(tmp);
     assert.deepStrictEqual(links, []);
     assert(fs.existsSync(p('.cursor', 'commands', 'base-audit.md')));
+  });
+  test('postinstall : installe dans le projet quand le paquet est une dépendance', () => {
+    const proj = fs.mkdtempSync(path.join(os.tmpdir(), 'kagents-dep-'));
+    try {
+      const root = path.resolve(__dirname, '..');
+      const dep = path.join(proj, 'node_modules', '@dev-kosaly', 'kagents');
+      for (const f of require('../package.json').files.concat('package.json'))
+        fs.cpSync(path.join(root, f), path.join(dep, f), { recursive: true });
+      const post = path.join(dep, 'bin', 'postinstall.js');
+      execFileSync(process.execPath, [post], { env: { ...process.env, INIT_CWD: proj }, stdio: 'pipe' });
+      assert(fs.existsSync(path.join(proj, '.kagents', 'agents', 'database_expert.md')));
+      assert(fs.existsSync(path.join(proj, '.agents', 'skills')));
+      // dans le kit lui-même (hors node_modules) : rien n'est installé
+      const before = fs.readdirSync(root).sort().join();
+      execFileSync(process.execPath, [path.join(root, 'bin', 'postinstall.js')], { env: { ...process.env, INIT_CWD: root }, stdio: 'pipe' });
+      assert.strictEqual(fs.readdirSync(root).sort().join(), before);
+    } finally {
+      fs.rmSync(proj, { recursive: true, force: true });
+    }
   });
   test('--version et --help', () => {
     assert.strictEqual(run(['--version']).trim(), require('../package.json').version);

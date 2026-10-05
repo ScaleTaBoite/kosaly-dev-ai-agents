@@ -4,9 +4,11 @@ Déclarés dans `ADAPTERS` de `bin/kagents.js`. Le kit est copié dans `.kagents
 
 | Outil | Placé dans le projet |
 |-------|----------------------|
-| `claude` | `.claude/commands`, `skills`, `agents` |
-| `cursor` | `.cursor/commands`, `skills`, `agents` |
+| `claude` | `.claude/commands`, `agents` |
+| `cursor` | `.cursor/commands`, `agents`, `rules` |
 | `agents` | `.agents/skills` (standard ouvert ; toujours installé en mode `auto`) |
+
+Les skills ne sont pas liées dans `.claude/` ni `.cursor/` : ces outils les afficheraient comme des commandes `/`. Elles sont chargées par chemin (`.kagents/skills/`) par les agents.
 
 Les agents sans frontmatter `name:` ne sont pas exposés aux outils.
 
