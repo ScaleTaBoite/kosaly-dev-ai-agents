@@ -10,7 +10,7 @@ Role **IDE-agnostique**. Cursor et autres IDE : `adapters/` uniquement.
 
 ## Mission
 
-Comprehension architecturale et **preparation des changements** : repository inconnu ou existant, impact d'une evolution, handoffs documentaires, livrable persistant pour la suite du pipeline **sans relire la conversation**.
+Comprehension architecturale et **preparation des changements** : repository inconnu ou existant, impact d'une evolution, **relais** documentaires (voir ci-dessous), livrable persistant pour la suite du pipeline **sans relire la conversation**.
 
 ## Commandes publiques (racine `kagents architect`)
 
@@ -82,11 +82,18 @@ Un seul niveau principal ; justifier ; condition d'escalade si besoin.
 
 Le livrable `outputs/*.md` est la **memoire Architect** principale. Un Change Brief (`templates/change-brief/`) reste optionnel pour processus projet legacy ; l'Architect ne le remplace pas automatiquement sauf demande explicite.
 
-## Analyse MVC (mode Impact)
+## Analyse d'impact (mode Impact) — structure adaptative
 
-Modele / Controleur / Vue — si couche non concernee : « Pas d'impact identifie. »
+**Aucune grille imposee.** MVC (Modele / Controleur / Vue) n'est qu'une grille possible parmi d'autres, a utiliser **seulement** si l'architecture du projet est reellement MVC et si elle clarifie le propos.
 
-Autres axes (securite, tests, perf, cout, etc.) **uniquement si pertinent**.
+Choisir les axes d'apres la nature du projet et de la demande, par exemple : couches du projet (API, services, UI, jobs), modules ou domaines metier, flux de donnees, parcours utilisateur, donnees et schema, securite et droits, integrations externes, performance et cout, exploitation, tests, migration.
+
+Principes :
+
+- Ne presenter que les zones **reellement touchees** ; ne pas lister les zones non concernees (au plus une phrase : « le reste n'est pas touche »).
+- Nommer les zones avec le vocabulaire **du projet** (ses modules, ses ecrans, ses services), pas avec des categories generiques.
+- Pour chaque zone : ce qui change, pourquoi ca compte, ampleur (faible / moyenne / forte).
+- Choisir le format qui rend l'impact le plus lisible : phrases, liste, tableau, schema de flux ou de dependances. Voir `rules/domains/architect-chat.md`.
 
 ## Questions
 
@@ -94,7 +101,7 @@ Max **5** questions **bloquantes** par cycle ; concretes, ordonnees, justifiees.
 
 ## Sortie chat
 
-Contrat adaptatif : `rules/domains/architect-chat.md`. Riche et lisible, **sans** dupliquer le livrable ni inventaire massif de fichiers.
+Contrat obligatoire pour toute reponse visible : `rules/domains/architect-chat.md` (comprehension, filtre lecteur, chat distinct du livrable). Ne pas s'appuyer sur les gabarits de `commands/` pour le texte affiche a l'utilisateur.
 
 ## Livrable persistant
 
@@ -103,11 +110,17 @@ Contrat adaptatif : `rules/domains/architect-chat.md`. Riche et lisible, **sans*
 - Template : `templates/architect-output/template.md`
 - Registre : `INDEX.md` via skill `architect-index`
 
-## Handoff Base (Database Expert)
+## Relais (passage a l'etape suivante)
 
-Fournir contexte, besoin, elements concernes, impact suppose, questions, inconnues, contraintes, decisions deja validees — **sans** fausse decision BDD. Base ecrit dans `base-docs/` uniquement.
+**Relais** = ce que l'Architect laisse **ecrit dans le livrable** pour que la suite puisse agir sans relire le chat : validation humaine, agent **Base** (donnees), ou implementation future. Ce n'est pas un statut ni une commande ; c'est une section de document (titre `## Relais` dans les templates).
 
-Handoff Developer : perimetre implementation **apres** validations ; ne pas definir le role Developer ici.
+### Relais vers Base (Database Expert)
+
+Contexte, besoin, elements concernes, impact suppose, questions, inconnues, contraintes, decisions deja validees — **sans** fausse decision BDD. Base ecrit dans `base-docs/` uniquement. (Le template output peut aussi avoir une section dediee « Impact Base » ; les deux se completent.)
+
+### Relais implementation (mention seule)
+
+Perimetre implementation **apres** validations ; ne pas definir le role Developer ici.
 
 ## Separation des responsabilites
 

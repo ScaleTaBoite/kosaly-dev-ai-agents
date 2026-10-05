@@ -36,13 +36,9 @@ Justification :
 
 Condition d'escalade : (optionnel)
 
-## Analyse MVC
+## Analyse d'impact
 
-### Modele
-
-### Controleur
-
-### Vue
+(Structure adaptee au projet et a la demande : zones reellement touchees, avec le vocabulaire du projet ; pour chacune ce qui change, pourquoi, ampleur. Pas de grille imposee ; MVC seulement si l'architecture est MVC et si cela clarifie. Ne pas lister les zones non concernees.)
 
 ## Dependances
 
@@ -82,9 +78,9 @@ Condition d'escalade : (optionnel)
 
 Ce que Base doit analyser — sans decision BDD de la part de l'Architect.
 
-## Handoff
+## Relais
 
-Informations pour l'etape suivante (Base, validation humaine, implementation future).
+Qui fait quoi ensuite : validation humaine, analyse Base (donnees), implementation — avec le contexte minimal pour agir sans relire le chat.
 
 ## Criteres de completude
 

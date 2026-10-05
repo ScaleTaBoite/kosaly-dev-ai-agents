@@ -28,4 +28,4 @@
 
 ## Decisions necessaires
 
-## Handoff
+## Relais

@@ -33,7 +33,7 @@
 
 (DEDUIT marque si deduction.)
 
-## Impacts / Handoffs
+## Impacts et relais
 
 ### Database Architect
 
