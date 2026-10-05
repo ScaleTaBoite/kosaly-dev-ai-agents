@@ -2,25 +2,30 @@
 
 Expose le harness dans le **repo projet** :
 
-| Chemin | Role |
+| Chemin | Rôle |
 |--------|------|
-| `.cursor/rules`, `.cursor/skills`, `.cursor/agents` | Integration Cursor (liens vers le canon) |
-| `.kagents/docs/` | Arborescence documentaire de reference du projet |
+| `.cursor/rules`, `.cursor/skills`, `.cursor/agents` | Intégration Cursor (liens vers le canon) |
+| `.kagents/docs/` | Arborescence documentaire de référence du projet |
 
-Structure `.kagents/` installee :
+Structure `.kagents/` installée :
 
 ```text
 .kagents/
 └── docs/
-    ├── architect-docs/   # liens vers architect.md, skills Architect, templates ADR / Change Brief
-    ├── base-docs/        # reserve (vide a l'install)
+    ├── architect-docs/
+    │   ├── INDEX.md
+    │   ├── command-architect*.md    # entrées kagents (liens)
+    │   ├── outputs/                 # architecture, features, impacts, specs, designs, audits
+    │   ├── decisions/               # DEC-XXX-<slug>.md
+    │   └── proposals/               # propositions Architect (historique)
+    ├── base-docs/                   # réservé Database Architect (vide à l’install)
     └── knowledge/
-        └── context.md    # cree si absent (contenu local projet, non ecrase)
+        └── context.md               # créé si absent (contenu local projet, non écrasé)
 ```
 
-Le harness source (`HARNESS_ROOT`) n'est jamais copie : uniquement des **liens symboliques** relatifs (aucun `.git` du harness dans le client).
+Le harness source (`HARNESS_ROOT`) n’est jamais copié : uniquement des **liens symboliques** relatifs (aucun `.git` du harness dans le client).
 
-## Prerequis
+## Prérequis
 
 - Harness disponible (submodule ou copie), chemin connu : `HARNESS_ROOT`.
 
@@ -40,13 +45,15 @@ HARNESS_ROOT=. ./adapters/cursor/install.sh
 
 ## Comportement
 
-- `.cursor/` : liens vers `rules/`, `skills/`, `agents/` du harness (re-lancer apres mise a jour du harness).
-- `.kagents/docs/architect-docs/` : liens vers le role Architect et ses quatre skills + templates harness.
-- `.kagents/docs/base-docs/` : repertoire cree, sans contenu harness dedie.
-- `.kagents/docs/knowledge/context.md` : modele minimal si le fichier n'existe pas deja.
+- `.cursor/` : liens vers `rules/`, `skills/`, `agents/` du harness (re-lancer après mise à jour du harness).
+- `.kagents/docs/architect-docs/` : rôle, `architect-commands.md`, skills internes Architect, `command-architect*.md`, templates, **`INDEX.md`**, **`outputs/`**, **`decisions/`**, **`proposals/`**.
+- Commandes publiques Architect : voir [docs/architect-commands.md](../../docs/architect-commands.md) — notamment **`kagents architect`**, **`:impact`**, **`:spec`**, **`:design`**, **`:audit`**, **`:status`** (read-only), **`:decision`** (décision humaine). Extension préparée : **`:compare`** uniquement.
+- Skills liées pour Architect : discovery, audit, impact, write-output, index, **status**, **decision** (internes, pas de commandes `architect:read-status` etc.).
+- `.kagents/docs/base-docs/` : répertoire créé, sans contenu harness dédié.
+- `.kagents/docs/knowledge/context.md` : modèle minimal si le fichier n’existe pas déjà.
 
-Ne pas editer les fichiers **lies** dans `architect-docs/` : modifier le harness puis re-lancer l'install.
+Ne pas éditer les fichiers **liés** dans `architect-docs/` : modifier le harness puis re-lancer l’install.
 
 ## Ce repo harness
 
-Pas de `.cursor/` ni `.kagents/` versionnes a la racine du canon.
+Pas de `.cursor/` ni `.kagents/` versionnés à la racine du canon.
