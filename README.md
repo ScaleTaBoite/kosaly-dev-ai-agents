@@ -55,11 +55,14 @@ npx @dev-kosaly/kagents --copy     # copies au lieu de liens (utile sous Windows
 npx @dev-kosaly/kagents uninstall
 ```
 
+Ajouter le paquet comme dépendance (`npm add @dev-kosaly/kagents` ou `pnpm add @dev-kosaly/kagents`) lance aussi l'installation automatiquement. Avec **pnpm**, les scripts des dépendances sont bloqués tant qu'ils ne sont pas approuvés : lancez `pnpm approve-builds` une fois (ou `pnpm exec kagents` à la main). `KAGENTS_SKIP_POSTINSTALL=1` désactive l'installation automatique.
+
 Par défaut, le kit détecte les outils présents (`.claude/`, `.cursor/`) et branche aussi `.agents/skills/`.
 
 Ce que fait l'installation :
-- Le kit est copié dans `.kagents/`. `.claude/`, `.cursor/` et `.agents/` ne contiennent que des liens relatifs.
+- Le kit est copié dans `.kagents/`. `.claude/` et `.cursor/` reçoivent des liens relatifs vers les commandes et les agents (les skills restent dans `.kagents/skills/` pour ne pas polluer le menu `/`) ; `.agents/skills/` expose les skills aux outils qui le lisent.
 - Le bloc `<!-- kagents:start/end -->` de `AGENTS.md` est régénéré (mode d'emploi, agents, routage). Le reste du fichier n'est jamais modifié.
+- `.gitignore` reçoit un bloc `# kagents:start/end` qui ignore le kit dans `.kagents/` mais pas `.kagents/docs/` (livrables et contexte, à versionner).
 - Un fichier existant qui n'est pas géré par KAgents n'est jamais écrasé.
 
 **Mise à jour** : relancer avec `@latest`. Les fichiers du kit dans `.kagents/` sont régénérés (ne pas les éditer). `.kagents/docs/`, qui contient les livrables des agents et `knowledge/context.md`, n'est jamais touché.

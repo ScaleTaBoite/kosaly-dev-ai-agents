@@ -29,6 +29,7 @@
     "access": "public"
   },
   "scripts": {
+    "postinstall": "node bin/postinstall.js",
     "test": "node scripts/smoke-test.js",
     "prepublishOnly": "npm test"
   },
