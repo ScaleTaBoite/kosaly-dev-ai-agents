@@ -19,9 +19,10 @@ Respecter `governance/actions.yaml`. En cas de doute sur une action sensible, **
 |--------|-------------|
 | Procedure | `skills/<nom>/SKILL.md` |
 | Role specialise | `agents/` |
-| Type de travail | `workflows/impact-levels.yaml` (Architect) |
+| Niveaux d'impact Architect | `workflows/architect-impact-levels.yaml` |
+| Style des reponses Architect | `rules/domains/architect-chat.md` |
 | Installation | `bin/kagents.js` (table `ADAPTERS`), `scripts/smoke-test.js` |
-| Commandes | `commands/` (prefixe par agent : `base-*`) |
+| Commandes | `commands/` (prefixe par agent : `architect*`, `base-*`) |
 
 ## Modifier ce repo
 
