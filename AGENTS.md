@@ -20,11 +20,11 @@ Respecter `governance/actions.yaml`. En cas de doute sur une action sensible, **
 | Procedure | `skills/<nom>/SKILL.md` |
 | Role specialise | `agents/` |
 | Type de travail | `workflows/impact-levels.yaml` (Architect) |
-| Installation | `install.sh`, `adapters/<outil>/` |
+| Installation | `bin/kagents.js` (table `ADAPTERS`), `scripts/smoke-test.js` |
 | Commandes | `commands/` (prefixe par agent : `base-*`) |
 
 ## Modifier ce repo
 
 - Nouvelle skill = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
-- Nouvel outil = dossier `adapters/<outil>/install.sh` s'appuyant sur `adapters/_lib.sh` (liens relatifs depuis `.kagents/`), pas de canon dans `.cursor/` ou `.claude/` a la racine.
+- Nouvel outil = une entree dans `ADAPTERS` de `bin/kagents.js` (liens relatifs depuis `.kagents/`), pas de canon dans `.cursor/` ou `.claude/` a la racine. Lancer `npm test` apres toute modification de l'installateur.
 - Agent = frontmatter `name`, `docs` (espace `docs/<agent>-docs/`), `description` ; commande = frontmatter `description`, `agent`, `mode`, `triggers`.

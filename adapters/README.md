@@ -1,13 +1,13 @@
-# Adapters
+# Outils pris en charge
 
-Couche d'integration par outil. Le canon est copie par `install.sh` dans `.kagents/` du projet ; chaque adapter y cree des **liens relatifs** (ou des copies avec `KAGENTS_MODE=copy`) et enregistre ce qu'il place dans `.kagents/.installed`. Un fichier utilisateur existant n'est jamais ecrase.
+Déclarés dans `ADAPTERS` de `bin/kagents.js`. Le kit est copié dans `.kagents/` ; chaque outil reçoit des **liens relatifs** (des copies avec `--copy`, ou si les liens sont impossibles). Ce que KAgents place est listé dans `.kagents/.installed`.
 
-| Adapter | Place dans le projet |
-|---------|----------------------|
-| `claude/` | `.claude/commands`, `skills`, `agents` |
-| `cursor/` | `.cursor/commands`, `skills`, `agents` |
-| `agents/` | `.agents/skills` (standard ouvert, toujours installe en mode `auto`) |
+| Outil | Placé dans le projet |
+|-------|----------------------|
+| `claude` | `.claude/commands`, `skills`, `agents` |
+| `cursor` | `.cursor/commands`, `skills`, `agents` |
+| `agents` | `.agents/skills` (standard ouvert ; toujours installé en mode `auto`) |
 
-Les agents sans frontmatter `name:` ne sont pas exposes aux outils.
+Les agents sans frontmatter `name:` ne sont pas exposés aux outils.
 
-Ajouter un outil : creer `adapters/<outil>/install.sh` (une dizaine de lignes) avec `source ../_lib.sh` puis `place_all` / `place_agents`. Fonctions : voir `_lib.sh`.
+Ajouter un outil : une entrée dans `ADAPTERS` (`[dossier du kit, destination, files|dirs|agents]`), puis mettre ce tableau à jour.
