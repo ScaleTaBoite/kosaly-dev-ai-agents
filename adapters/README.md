@@ -5,7 +5,7 @@ Couche d'integration par outil. Le canon est copie par `install.sh` dans `.kagen
 | Adapter | Place dans le projet |
 |---------|----------------------|
 | `claude/` | `.claude/commands`, `skills`, `agents` |
-| `cursor/` | `.cursor/commands`, `skills`, `agents`, `rules` |
+| `cursor/` | `.cursor/commands`, `skills`, `agents` |
 | `agents/` | `.agents/skills` (standard ouvert, toujours installe en mode `auto`) |
 
 Les agents sans frontmatter `name:` ne sont pas exposes aux outils.

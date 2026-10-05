@@ -2,22 +2,19 @@
 
 KAgents : kit d'agents IA d'ingenierie, installable dans un projet (Claude Code, Cursor, tout outil lisant `AGENTS.md`) de maniere coherente sur plusieurs projets.
 
-Le **projet client** porte son etat et ses decisions (`STATE.md`, `schema.yaml`, ADR, etc.).  
-Ce repository fournit regles, skills, workflows, templates et garde-fous.
+Le **projet client** porte son etat et ses decisions (etat, decisions, ADR).  
+Ce repository fournit agents, skills, commandes et l'installateur.
 
 ## Structure
 
 | Dossier | Role |
 |---------|------|
 | `governance/` | Matrice auto / proposition / validation humaine / interdit |
-| `standards/` | Reference entreprise (charge a la demande) |
-| `rules/` | Regles courtes actionnables |
 | `skills/` | Procedures specialisees (`SKILL.md`) |
 | `agents/` | Roles canoniques (independants de l'IDE) |
-| `workflows/` | Enchainements et niveaux d'impact |
-| `templates/` | Formats a copier dans un repo projet |
+| `workflows/` | Niveaux d'impact (Architect) |
+| `templates/` | ADR, Change Brief (Architect) |
 | `checklists/` | Controles de revue |
-| `scripts/` | Verifications deterministes |
 | `commands/` | Points d'entree : lancent un agent dans un mode |
 | `adapters/` | Integration par outil (`claude`, `cursor`, `agents`) |
 | `install.sh` | Installe le kit dans `.kagents/` d'un projet |

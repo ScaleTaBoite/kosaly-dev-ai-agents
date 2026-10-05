@@ -16,7 +16,7 @@ export KAGENTS_MODE="${KAGENTS_MODE:-link}"
 source "$HARNESS_ROOT/adapters/_lib.sh"
 
 TOOLS="${1:-auto}"
-KIT_DIRS=(agents skills commands rules templates standards checklists workflows governance)
+KIT_DIRS=(agents skills commands templates checklists workflows governance)
 
 if [[ "$TARGET_ROOT" == "$HARNESS_ROOT" ]]; then
   echo "kagents: à lancer depuis la racine d'un projet, pas depuis le harness." >&2
@@ -30,7 +30,6 @@ cleanup() {
   while IFS= read -r path; do
     case "$path" in "" | /* | *..*) continue ;; esac
     rm -rf "${TARGET_ROOT:?}/$path"
-    rmdir -p --ignore-fail-on-non-empty "$(dirname "$TARGET_ROOT/$path")" 2>/dev/null || true
   done <"$MANIFEST"
   : >"$MANIFEST"
 }

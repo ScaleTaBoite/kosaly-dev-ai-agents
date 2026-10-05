@@ -1,3 +1,9 @@
+---
+name: architect
+docs: architect-docs
+description: Architect, l'agent d'architecture et de spécification. Transforme une demande en cadre exploitable avant implémentation (analyse d'impact, niveau L0-L3, Change Brief, ADR proposées) pour un nouveau projet, un projet existant ou une fonctionnalité.
+---
+
 # Architect / Specification Agent (canon)
 
 Role ScaleTaBoite Engineering Harness. Source independante de Cursor et du modele IA.
