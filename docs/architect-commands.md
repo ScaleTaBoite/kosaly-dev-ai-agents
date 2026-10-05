@@ -20,7 +20,7 @@ Fichiers entree harness : `commands/architect*.md`.
 
 ## Distinctions
 
-- **Impact** : ce que le changement **touche** (MVC, risques, L0–L3).
+- **Impact** : ce que le changement **touche** (zones touchees adaptees au projet, risques, L0–L3).
 - **Spec** : ce que la fonctionnalite doit **faire** (comportement, cas, criteres) + reference impact si pertinent.
 - **architect** (sans suffixe) : etat **reel** observe.
 - **architect:design** : etat **cible** PROPOSITION (jamais decision automatique).

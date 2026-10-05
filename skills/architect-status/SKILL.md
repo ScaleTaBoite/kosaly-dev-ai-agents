@@ -36,6 +36,6 @@ Statuts decisions : PROPOSEE, A VALIDER, VALIDEE, REJETEE, REMPLACEE.
 
 ## Sortie chat
 
-Structure adaptative : `# Architect — Etat du projet` — voir `workflows/architect-status.md` et exemples dans `commands/architect-status.md`.
+Appliquer `rules/domains/architect-chat.md` section **0 (filtre lecteur)** : langage metier, pas d'IDs DEC/PROP, pas d'historique de remplacement, pas de chemins ni versions de livrables. Les tableaux de `commands/architect-status.md` decrivent la lecture INDEX, pas l'affichage chat.
 
 Ne pas lister tous les fichiers du repo.

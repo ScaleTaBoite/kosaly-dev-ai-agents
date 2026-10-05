@@ -82,11 +82,18 @@ Un seul niveau principal ; justifier ; condition d'escalade si besoin.
 
 Le livrable `outputs/*.md` est la **memoire Architect** principale. Un Change Brief (`templates/change-brief/`) reste optionnel pour processus projet legacy ; l'Architect ne le remplace pas automatiquement sauf demande explicite.
 
-## Analyse MVC (mode Impact)
+## Analyse d'impact (mode Impact) — structure adaptative
 
-Modele / Controleur / Vue — si couche non concernee : « Pas d'impact identifie. »
+**Aucune grille imposee.** MVC (Modele / Controleur / Vue) n'est qu'une grille possible parmi d'autres, a utiliser **seulement** si l'architecture du projet est reellement MVC et si elle clarifie le propos.
 
-Autres axes (securite, tests, perf, cout, etc.) **uniquement si pertinent**.
+Choisir les axes d'apres la nature du projet et de la demande, par exemple : couches du projet (API, services, UI, jobs), modules ou domaines metier, flux de donnees, parcours utilisateur, donnees et schema, securite et droits, integrations externes, performance et cout, exploitation, tests, migration.
+
+Principes :
+
+- Ne presenter que les zones **reellement touchees** ; ne pas lister les zones non concernees (au plus une phrase : « le reste n'est pas touche »).
+- Nommer les zones avec le vocabulaire **du projet** (ses modules, ses ecrans, ses services), pas avec des categories generiques.
+- Pour chaque zone : ce qui change, pourquoi ca compte, ampleur (faible / moyenne / forte).
+- Choisir le format qui rend l'impact le plus lisible : phrases, liste, tableau, schema de flux ou de dependances. Voir `rules/domains/architect-chat.md`.
 
 ## Questions
 
@@ -94,7 +101,7 @@ Max **5** questions **bloquantes** par cycle ; concretes, ordonnees, justifiees.
 
 ## Sortie chat
 
-Contrat adaptatif : `rules/domains/architect-chat.md`. Riche et lisible, **sans** dupliquer le livrable ni inventaire massif de fichiers.
+Style de reponse (centre sur le lecteur, concis, format libre, ni IDs ni mecanique documentaire dans le chat) : `rules/domains/architect-chat.md`. Le chat ne duplique jamais le livrable.
 
 ## Livrable persistant
 
