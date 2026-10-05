@@ -6,14 +6,43 @@ Kit d'agents IA d'ingénierie, installable dans n'importe quel projet. Il foncti
 - **Skill** : comment (procédure réutilisable).
 - **Commande** : point d'entrée qui lance un agent dans un mode.
 
-## Agents
+## Principes
 
-| Agent | Rôle | Commandes |
-|-------|------|-----------|
-| **Base** | Conçoit, audite et fait évoluer la base de données | `/base-design`, `/base-audit`, `/base-evolve` |
-| **Architect** | Cadre une demande avant implémentation (impact, niveau L0–L3, Change Brief) | `/arch-design`, `/arch-audit`, `/arch-feature` |
+1. **Une source de vérité par type** : agents, skills, commandes, workflows, standards.
+2. **Contexte minimal** : lire uniquement ce qui sert la tâche.
+3. **Proposition ≠ décision** : une recommandation de l'Architect reste une proposition tant qu'un humain ne l'a pas enregistrée (`/architect-decision`).
+4. **Source unique** : tout vit dans `.kagents/` ; les dossiers des outils ne contiennent que des liens relatifs.
+5. **Chaque agent n'écrit que dans son espace** : `.kagents/docs/<agent>-docs/`.
 
-Chaque agent n'écrit que dans son propre espace, `.kagents/docs/<agent>-docs/`.
+## Agents et commandes
+
+Les commandes sont définies dans `commands/*.md`. Les skills correspondantes sont internes : on invoque une commande, pas une skill.
+
+### Architect
+
+Comprend l'architecture, prépare les changements et laisse des livrables persistants. Contrat complet : [docs/architect-commands.md](docs/architect-commands.md). Rôle : [agents/architect.md](agents/architect.md).
+
+| Commande | Rôle |
+|----------|------|
+| `/architect` | Architecture **observée** (existant) |
+| `/architect-impact "<demande>"` | Impact d'une évolution (L0–L3) |
+| `/architect-spec "<fonctionnalité>"` | Spécification exploitable |
+| `/architect-design "<objectif>"` | Architecture **cible** (proposition) |
+| `/architect-audit [scope]` | Audit de l'architecture existante |
+| `/architect-status` | État du projet, en lecture seule |
+| `/architect-decision "<texte>"` | Décision **humaine** enregistrée (`decisions/DEC-XXX-*.md`) |
+
+`/architect-compare` est préparée mais pas encore implémentée.
+
+### Base
+
+Conçoit, audite et fait évoluer la base de données. Rôle : [agents/database_expert.md](agents/database_expert.md).
+
+| Commande | Rôle |
+|----------|------|
+| `/base-design` | Modèle de données d'un nouveau projet |
+| `/base-audit` | Audit d'une base existante |
+| `/base-evolve` | Impact d'une fonctionnalité sur la base |
 
 ## Installation dans un projet
 
@@ -29,11 +58,25 @@ npx @dev-kosaly/kagents uninstall
 Par défaut, le kit détecte les outils présents (`.claude/`, `.cursor/`) et branche aussi `.agents/skills/`.
 
 Ce que fait l'installation :
-- Le kit est copié dans `.kagents/`, qui est la source unique. `.claude/`, `.cursor/` et `.agents/` ne contiennent que des liens relatifs.
+- Le kit est copié dans `.kagents/`. `.claude/`, `.cursor/` et `.agents/` ne contiennent que des liens relatifs.
 - Le bloc `<!-- kagents:start/end -->` de `AGENTS.md` est régénéré (mode d'emploi, agents, routage). Le reste du fichier n'est jamais modifié.
 - Un fichier existant qui n'est pas géré par KAgents n'est jamais écrasé.
 
 **Mise à jour** : relancer avec `@latest`. Les fichiers du kit dans `.kagents/` sont régénérés (ne pas les éditer). `.kagents/docs/`, qui contient les livrables des agents et `knowledge/context.md`, n'est jamais touché.
+
+### Espace documentaire du projet
+
+```text
+.kagents/docs/
+├── architect-docs/
+│   ├── INDEX.md          # registre de navigation
+│   ├── outputs/          # livrables (architecture, features, impacts, specs, designs, audits)
+│   ├── decisions/        # DEC-001, DEC-002… (validées, rejetées ou remplacées)
+│   └── proposals/        # propositions de l'Architect (historique conservé)
+├── base-docs/            # livrables de Base (db/)
+└── knowledge/
+    └── context.md        # intention du projet (écrit par l'utilisateur, jamais écrasé)
+```
 
 ## Structure du dépôt
 
@@ -42,12 +85,16 @@ Ce que fait l'installation :
 | `bin/kagents.js` | Installateur (Node, sans dépendance) |
 | `agents/` | Les agents |
 | `skills/` | Les procédures (`SKILL.md`) |
-| `commands/` | Les points d'entrée (préfixe par agent : `base-*`, `arch-*`) |
-| `workflows/`, `templates/`, `checklists/`, `governance/` | Support de l'agent Architect |
+| `commands/` | Les points d'entrée (préfixe par agent : `base-*`, `architect*`) |
+| `workflows/` | Enchaînements et niveaux d'impact |
+| `templates/` | Formats de livrables (ADR, décisions, spécifications…) |
+| `rules/` | Règles courtes actionnables |
+| `checklists/`, `governance/` | Contrôles de revue et matrice des actions sensibles |
+| `docs/` | Contrat des commandes Architect |
 | `adapters/` | Documentation des outils pris en charge |
 | `scripts/` | Test de fumée de l'installateur |
 
-Voir [adapters/README.md](adapters/README.md) pour ajouter un outil. Développement : `npm test`.
+Voir [adapters/README.md](adapters/README.md). Développement : `npm test`.
 
 ## Licence
 

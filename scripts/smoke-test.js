@@ -52,14 +52,14 @@ try {
 
   test('installation (auto)', () => {
     run();
-    for (const f of ['.kagents/agents/database_expert.md', '.kagents/docs/knowledge/context.md', '.kagents/docs/base-docs', '.kagents/docs/architect-docs', '.claude/agents/database_expert.md', '.claude/commands/base-evolve.md', '.cursor/agents/architect.md', '.agents/skills/db-docs/SKILL.md'])
+    for (const f of ['.kagents/agents/database_expert.md', '.kagents/docs/knowledge/context.md', '.kagents/docs/base-docs', '.kagents/docs/architect-docs', '.claude/agents/database_expert.md', '.claude/commands/base-evolve.md', '.cursor/agents/architect.md', '.kagents/docs/architect-docs/INDEX.md', '.kagents/docs/architect-docs/outputs/specs', '.cursor/rules/architect-invariants.md', '.agents/skills/db-docs/SKILL.md'])
       assert(fs.existsSync(p(...f.split('/'))), `manquant : ${f}`);
     assert.deepStrictEqual(brokenLinks(), []);
   });
   test('AGENTS.md : contenu utilisateur gardé, bloc généré', () => {
     const s = fs.readFileSync(p('AGENTS.md'), 'utf8');
     assert(s.startsWith('# Mon projet\n\nTexte utilisateur.'));
-    assert(s.includes('`/base-audit`') && s.includes('`/arch-feature`'));
+    assert(s.includes('`/base-audit`') && s.includes('`/architect-impact`'));
     assert.strictEqual(s.split('<!-- kagents:start -->').length, 2);
   });
   test('fichier utilisateur jamais écrasé', () => {

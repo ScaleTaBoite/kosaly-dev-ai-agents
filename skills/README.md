@@ -1,31 +1,28 @@
 # Skills
 
-Une procedure = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
+## Architect / Spec (internes — pas des commandes publiques)
 
-## Architect / Spec (implementees)
+| Skill | Commande publique typique |
+|-------|---------------------------|
+| `architect-discovery/` | `kagents architect` |
+| `architect-audit/` | `kagents architect:audit`, `:impact`, `:spec` |
+| `architect-impact/` | `kagents architect:impact`, partie `:spec` |
+| `architect-write-output/` | toutes commandes avec livrable |
+| `architect-index/` | livrables + registre decisions |
+| `architect-status/` | `kagents architect:status` (read-only) |
+| `architect-decision/` | `kagents architect:decision` |
 
-| Skill | Role |
+Contrat commandes : `docs/architect-commands.md` — fichiers `commands/architect*.md`.
+
+Role : `agents/architect.md`.
+
+## Base (base de données)
+
+| Skill | Rôle |
 |-------|------|
-| `feature-analysis/` | Demande feature ou modification fonctionnelle |
-| `audit-repository/` | Cartographie projet existant |
-| `architecture-impact/` | Impacts et niveau L0–L3 |
-| `write-change-brief/` | Change Brief dans le repo projet |
-
-Role canonique : `agents/architect.md`.
-
-## Base / base de donnees (implementees)
-
-| Skill | Role |
-|-------|------|
-| `schema-exploration/` | Explorer le repo et reconstruire le modele |
+| `schema-exploration/` | Explorer le repo et reconstruire le modèle |
 | `catalyst-export/` | Exploiter l'export JSON Catalyst |
-| `db-analysis/` | Grille d'analyse et severites |
-| `db-docs/` | Modeles des fichiers de `base-docs/db/` |
+| `db-analysis/` | Grille d'analyse et sévérités |
+| `db-docs/` | Modèles des fichiers de `base-docs/db/` |
 
 Agent : `agents/database_expert.md`.
-
-## A venir (hors perimetre actuel)
-
-- `write-adr/`
-- `catalyst-impact/` (analyse detaillee)
-- `init-project-artifacts/`

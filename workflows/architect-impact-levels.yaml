@@ -1,0 +1,28 @@
+# Niveaux d'impact — role Architect / Spec uniquement
+# Reference : agents/architect.md
+#
+# Distinct de workflows/impact-levels.yaml (pipeline global, autre semantique L0,
+# roles Developer/Reviewer). Pour une analyse Architect, utiliser CE fichier.
+
+levels:
+  L0:
+    label: Comprehension / documentation
+    description: >
+      Aucune modification architecturale significative. Comprendre, documenter
+      ou expliquer l'existant.
+
+  L1:
+    label: Impact local
+    description: >
+      Impact limite a une zone ou un composant clairement delimite.
+
+  L2:
+    label: Impact transversal
+    description: >
+      Plusieurs couches, modules ou contrats concernes. Coordination multi-domaines.
+
+  L3:
+    label: Impact systemique
+    description: >
+      Architecture globale, donnees critiques, contrats partages, securite importante,
+      performance structurante, infrastructure, integrations externes ou domaines fortement couples.

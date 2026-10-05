@@ -8,7 +8,7 @@ const path = require('path');
 
 const PKG_ROOT = path.resolve(__dirname, '..');
 const PKG = JSON.parse(fs.readFileSync(path.join(PKG_ROOT, 'package.json'), 'utf8'));
-const KIT_DIRS = ['agents', 'skills', 'commands', 'templates', 'checklists', 'workflows', 'governance'];
+const KIT_DIRS = ['agents', 'skills', 'commands', 'rules', 'templates', 'checklists', 'workflows', 'governance', 'docs'];
 const SKIP = new Set(['README.md', '.gitkeep']);
 const BLOCK_RE = /<!-- kagents:start -->[\s\S]*?<!-- kagents:end -->/;
 
@@ -25,6 +25,8 @@ const ADAPTERS = {
     ['commands', '.cursor/commands', 'files'],
     ['skills', '.cursor/skills', 'dirs'],
     ['agents', '.cursor/agents', 'agents'],
+    ['rules/global', '.cursor/rules', 'files'],
+    ['rules/domains', '.cursor/rules', 'files'],
   ],
 };
 
@@ -168,6 +170,7 @@ class Installer {
       const docs = frontmatter(path.join(this.kagents, 'agents', f)).docs;
       if (docs) fs.mkdirSync(path.join(this.kagents, 'docs', docs), { recursive: true });
     }
+    this.createArchitectDocs();
     const ctx = path.join(this.kagents, 'docs', 'knowledge', 'context.md');
     if (!fs.existsSync(ctx)) {
       fs.writeFileSync(
@@ -194,6 +197,17 @@ Document partagé, écrit par l'utilisateur. Les agents le lisent, ne l'écriven
 `,
       );
     }
+  }
+
+  // Espace de l'Architect : livrables, décisions, propositions et INDEX.md (créé une fois, jamais écrasé).
+  createArchitectDocs() {
+    const root = path.join(this.kagents, 'docs', 'architect-docs');
+    if (!fs.existsSync(root)) return;
+    for (const d of ['architecture', 'impacts', 'features', 'specs', 'designs', 'audits'].map((n) => `outputs/${n}`).concat(['decisions', 'proposals']))
+      fs.mkdirSync(path.join(root, d), { recursive: true });
+    const index = path.join(root, 'INDEX.md');
+    const tpl = path.join(this.kagents, 'templates', 'architect-index', 'INDEX.template.md');
+    if (!fs.existsSync(index) && fs.existsSync(tpl)) fs.copyFileSync(tpl, index);
   }
 
   renderBlock() {
