@@ -5,6 +5,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
+const tty = require('tty');
 
 const PKG_ROOT = path.resolve(__dirname, '..');
 const PKG = JSON.parse(fs.readFileSync(path.join(PKG_ROOT, 'package.json'), 'utf8'));
@@ -34,14 +36,18 @@ const ADAPTERS = {
 
 const HELP = `kagents ${PKG.version}
 
-Usage : kagents [install] [--tools claude,cursor,agents|auto] [--copy]
+Usage : kagents [install] [--tools claude,cursor,agents|auto|none] [--yes] [--copy]
+        kagents --configure          (rechoisir les outils)
         kagents uninstall
         kagents --help | --version
 
-À lancer depuis la racine du projet.
-  --tools   outils à brancher (défaut : auto = agents + claude/cursor s'ils sont détectés)
-  --copy    copies au lieu de liens symboliques (aussi la variable KAGENTS_MODE=copy)
-  uninstall retire ce que KAgents a installé (docs/ est conservé)
+À lancer depuis la racine du projet. Dans un terminal, une liste permet de choisir
+les outils à brancher ; le choix est mémorisé dans .kagents/config.json.
+  --tools      outils à brancher, sans question
+  --yes, -y    ne pose pas de question (détection automatique)
+  --configure  pose à nouveau la question
+  --copy       copies au lieu de liens symboliques (aussi KAGENTS_MODE=copy)
+  uninstall    retire ce que KAgents a installé (docs/ est conservé)
 `;
 
 const log = (m) => console.log(`kagents: ${m}`);
@@ -53,12 +59,14 @@ const die = (m) => {
 
 // --- Arguments ----------------------------------------------------------------
 function parseArgs(argv) {
-  const o = { cmd: 'install', tools: 'auto', copy: process.env.KAGENTS_MODE === 'copy' };
+  const o = { cmd: 'install', tools: null, yes: false, configure: false, copy: process.env.KAGENTS_MODE === 'copy' };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '-h' || a === '--help') o.cmd = 'help';
     else if (a === '-v' || a === '--version') o.cmd = 'version';
     else if (a === '--copy') o.copy = true;
+    else if (a === '-y' || a === '--yes') o.yes = true;
+    else if (a === '--configure') o.configure = true;
     else if (a === '--tools') o.tools = argv[++i] || die('--tools attend une valeur');
     else if (a.startsWith('--tools=')) o.tools = a.slice(8);
     else if (a === 'install' || a === 'uninstall') o.cmd = a;
@@ -104,6 +112,7 @@ class Installer {
     this.copy = copy;
     this.kagents = path.join(target, '.kagents');
     this.manifest = path.join(this.kagents, '.installed');
+    this.config = path.join(this.kagents, 'config.json');
     this.entries = [];
   }
 
@@ -285,13 +294,30 @@ Document partagé, écrit par l'utilisateur. Les agents le lisent, ne l'écriven
     fs.writeFileSync(file, out);
   }
 
-  resolveTools(tools) {
-    if (tools !== 'auto') return tools.split(',').filter(Boolean);
-    const t = ['agents'];
+  detectTools() {
     const has = (p) => fs.existsSync(path.join(this.target, p));
+    const t = [];
     if (has('.claude') || has('CLAUDE.md')) t.push('claude');
     if (has('.cursor')) t.push('cursor');
     return t;
+  }
+
+  resolveTools(tools) {
+    return tools === 'auto' ? ['agents', ...this.detectTools()] : tools;
+  }
+
+  loadConfig() {
+    try {
+      const c = JSON.parse(fs.readFileSync(this.config, 'utf8'));
+      return Array.isArray(c.tools) ? c.tools : null;
+    } catch {
+      return null;
+    }
+  }
+
+  saveConfig(tools) {
+    fs.mkdirSync(this.kagents, { recursive: true });
+    fs.writeFileSync(this.config, JSON.stringify({ tools }, null, 2) + '\n');
   }
 
   runAdapters(tools) {
@@ -368,21 +394,118 @@ Document partagé, écrit par l'utilisateur. Les agents le lisent, ne l'écriven
       else fs.rmSync(gi);
     }
     fs.rmSync(this.manifest, { force: true });
+    fs.rmSync(this.config, { force: true });
     this.prune(removed);
     log('désinstallé (.kagents/docs/ conservé : ce sont vos livrables)');
   }
 }
 
+// --- Question interactive -----------------------------------------------------
+// Terminal utilisable : le nôtre, ou /dev/tty quand on est lancé par un postinstall (stdin/stdout détournés).
+function openTTY() {
+  if (process.stdin.isTTY && process.stdout.isTTY) return { input: process.stdin, output: process.stdout, close() {} };
+  if (process.env.KAGENTS_FROM_POSTINSTALL && process.platform !== 'win32') {
+    try {
+      const rfd = fs.openSync('/dev/tty', 'r');
+      const wfd = fs.openSync('/dev/tty', 'w');
+      const input = new tty.ReadStream(rfd);
+      const output = new tty.WriteStream(wfd);
+      return { input, output, close: () => { input.destroy(); output.destroy(); } };
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+// Liste à cocher : ↑↓ déplacer, espace cocher, a tout, entrée valider. Renvoie les ids cochés.
+function multiselect(io, message, items) {
+  return new Promise((resolve) => {
+    const { input, output } = io;
+    const state = items.map((i) => ({ ...i }));
+    let cur = 0;
+    let drawn = false;
+    const draw = () => {
+      if (drawn) output.write(`\x1b[${state.length + 1}A`);
+      drawn = true;
+      output.write(`\x1b[2K\x1b[1m?\x1b[0m ${message}\n`);
+      state.forEach((it, i) => {
+        const box = it.checked ? '\x1b[32m◉\x1b[0m' : '◯';
+        output.write(`\x1b[2K ${i === cur ? '\x1b[36m❯\x1b[0m' : ' '} ${box} ${it.label}\n`);
+      });
+    };
+    const finish = () => {
+      input.removeListener('keypress', onKey);
+      input.setRawMode(false);
+      input.pause();
+      output.write('\x1b[?25h');
+      io.close();
+      resolve(state.filter((i) => i.checked).map((i) => i.id));
+    };
+    const onKey = (str, key = {}) => {
+      if (key.ctrl && key.name === 'c') {
+        output.write('\x1b[?25h\n');
+        process.exit(130);
+      }
+      if (key.name === 'up') cur = (cur + state.length - 1) % state.length;
+      else if (key.name === 'down') cur = (cur + 1) % state.length;
+      else if (key.name === 'space') state[cur].checked = !state[cur].checked;
+      else if (key.name === 'a') {
+        const all = state.every((i) => i.checked);
+        state.forEach((i) => (i.checked = !all));
+      } else if (key.name === 'return') {
+        draw();
+        return finish();
+      }
+      draw();
+    };
+    readline.emitKeypressEvents(input);
+    input.setRawMode(true);
+    input.resume();
+    output.write('\x1b[?25l');
+    input.on('keypress', onKey);
+    draw();
+  });
+}
+
+async function chooseTools(inst, o) {
+  if (o.tools) {
+    const t = o.tools === 'auto' ? 'auto' : o.tools === 'none' ? [] : o.tools.split(',').filter(Boolean);
+    if (t !== 'auto') inst.chosen = t;
+    return t;
+  }
+  if (!o.configure) {
+    const saved = inst.loadConfig();
+    if (saved) return saved;
+  }
+  if (!o.yes && !process.env.KAGENTS_NO_PROMPT && !process.env.CI) {
+    const io = openTTY();
+    if (io) {
+      const detected = inst.detectTools();
+      const picked = await multiselect(io, 'Pour quels outils installer KAgents ?  (↑↓ espace a entrée)', [
+        { id: 'claude', label: 'Claude Code  (.claude/commands, .claude/agents)', checked: detected.includes('claude') },
+        { id: 'cursor', label: 'Cursor  (.cursor/commands, .cursor/agents, .cursor/rules)', checked: detected.includes('cursor') },
+        { id: 'agents', label: 'Codex et autres outils AGENTS.md  (.agents/skills)', checked: true },
+      ]);
+      inst.chosen = picked;
+      return picked;
+    }
+  }
+  return 'auto';
+}
+
 // --- Main ---------------------------------------------------------------------
-function main() {
+async function main() {
   const o = parseArgs(process.argv.slice(2));
   if (o.cmd === 'help') return console.log(HELP);
   if (o.cmd === 'version') return console.log(PKG.version);
   const target = process.cwd();
   if (path.resolve(target) === PKG_ROOT) die("à lancer depuis la racine d'un projet, pas depuis le kit.");
   const inst = new Installer(target, o.copy);
-  if (o.cmd === 'uninstall') inst.uninstall();
-  else inst.install(o.tools);
+  if (o.cmd === 'uninstall') return inst.uninstall();
+  const tools = await chooseTools(inst, o);
+  inst.install(tools);
+  if (inst.chosen) inst.saveConfig(inst.chosen);
 }
 
 main();

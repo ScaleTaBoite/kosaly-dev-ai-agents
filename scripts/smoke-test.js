@@ -10,7 +10,7 @@ const { execFileSync } = require('child_process');
 const BIN = path.resolve(__dirname, '..', 'bin', 'kagents.js');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kagents-'));
 const run = (args = [], env = {}) =>
-  execFileSync(process.execPath, [BIN, ...args], { cwd: tmp, env: { ...process.env, ...env }, encoding: 'utf8', stdio: 'pipe' });
+  execFileSync(process.execPath, [BIN, ...args], { cwd: tmp, env: { ...process.env, KAGENTS_NO_PROMPT: '1', ...env }, encoding: 'utf8', stdio: 'pipe' });
 const p = (...s) => path.join(tmp, ...s);
 const snapshot = () => {
   const out = [];
@@ -111,16 +111,29 @@ try {
       for (const f of require('../package.json').files.concat('package.json'))
         fs.cpSync(path.join(root, f), path.join(dep, f), { recursive: true });
       const post = path.join(dep, 'bin', 'postinstall.js');
-      execFileSync(process.execPath, [post], { env: { ...process.env, INIT_CWD: proj }, stdio: 'pipe' });
+      execFileSync(process.execPath, [post], { env: { ...process.env, KAGENTS_NO_PROMPT: '1', INIT_CWD: proj }, stdio: 'pipe' });
       assert(fs.existsSync(path.join(proj, '.kagents', 'agents', 'database_expert.md')));
       assert(fs.existsSync(path.join(proj, '.agents', 'skills')));
       // dans le kit lui-même (hors node_modules) : rien n'est installé
       const before = fs.readdirSync(root).sort().join();
-      execFileSync(process.execPath, [path.join(root, 'bin', 'postinstall.js')], { env: { ...process.env, INIT_CWD: root }, stdio: 'pipe' });
+      execFileSync(process.execPath, [path.join(root, 'bin', 'postinstall.js')], { env: { ...process.env, KAGENTS_NO_PROMPT: '1', INIT_CWD: root }, stdio: 'pipe' });
       assert.strictEqual(fs.readdirSync(root).sort().join(), before);
     } finally {
       fs.rmSync(proj, { recursive: true, force: true });
     }
+  });
+  test('--tools : choix explicite, mémorisé, rejoué sans question', () => {
+    run(['uninstall']);
+    run(['--tools', 'claude']);
+    assert(fs.existsSync(p('.claude', 'commands', 'base-audit.md')) || fs.existsSync(p('.claude', 'commands')));
+    assert(!fs.existsSync(p('.agents')));
+    assert.deepStrictEqual(JSON.parse(fs.readFileSync(p('.kagents', 'config.json'), 'utf8')).tools, ['claude']);
+    run(); // réinstallation : le choix sauvegardé est repris
+    assert(!fs.existsSync(p('.agents')));
+    run(['--tools', 'none']);
+    assert.deepStrictEqual(JSON.parse(fs.readFileSync(p('.kagents', 'config.json'), 'utf8')).tools, []);
+    run(['uninstall']);
+    assert(!fs.existsSync(p('.kagents', 'config.json')));
   });
   test('--version et --help', () => {
     assert.strictEqual(run(['--version']).trim(), require('../package.json').version);

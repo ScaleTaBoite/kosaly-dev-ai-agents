@@ -20,7 +20,7 @@ if (!pkgRoot.split(path.sep).includes('node_modules')) skip(); // développement
 if (path.resolve(project) === pkgRoot) skip();
 
 try {
-  spawnSync(process.execPath, [path.join(__dirname, 'kagents.js')], { cwd: project, stdio: 'inherit' });
+  spawnSync(process.execPath, [path.join(__dirname, 'kagents.js')], { cwd: project, stdio: 'inherit', env: { ...process.env, KAGENTS_FROM_POSTINSTALL: '1' } });
 } catch {
   /* jamais bloquant */
 }

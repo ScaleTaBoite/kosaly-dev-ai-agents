@@ -50,14 +50,24 @@ Prérequis : Node 18 ou plus. Depuis la racine du projet :
 
 ```bash
 npx @dev-kosaly/kagents            # ou : pnpm dlx @dev-kosaly/kagents
-npx @dev-kosaly/kagents --tools claude,cursor,agents
+npx @dev-kosaly/kagents --tools claude,cursor,agents   # sans question
+npx @dev-kosaly/kagents --configure                    # rechoisir les outils
 npx @dev-kosaly/kagents --copy     # copies au lieu de liens (utile sous Windows)
 npx @dev-kosaly/kagents uninstall
 ```
 
 Ajouter le paquet comme dépendance (`npm add @dev-kosaly/kagents` ou `pnpm add @dev-kosaly/kagents`) lance aussi l'installation automatiquement. Avec **pnpm**, les scripts des dépendances sont bloqués tant qu'ils ne sont pas approuvés : lancez `pnpm approve-builds` une fois (ou `pnpm exec kagents` à la main). `KAGENTS_SKIP_POSTINSTALL=1` désactive l'installation automatique.
 
-Par défaut, le kit détecte les outils présents (`.claude/`, `.cursor/`) et branche aussi `.agents/skills/`.
+Dans un terminal, l'installation pose la question :
+
+```text
+? Pour quels outils installer KAgents ?  (↑↓ espace a entrée)
+ ❯ ◉ Claude Code  (.claude/commands, .claude/agents)
+   ◯ Cursor  (.cursor/commands, .cursor/agents, .cursor/rules)
+   ◉ Codex et autres outils AGENTS.md  (.agents/skills)
+```
+
+Le choix est mémorisé dans `.kagents/config.json` et rejoué aux mises à jour. Sans terminal (CI) ou avec `--yes`, les outils sont détectés automatiquement (`.claude/`, `.cursor/`) et `.agents/skills/` est ajouté.
 
 Ce que fait l'installation :
 - Le kit est copié dans `.kagents/`. `.claude/` et `.cursor/` reçoivent des liens relatifs vers les commandes et les agents (les skills restent dans `.kagents/skills/` pour ne pas polluer le menu `/`) ; `.agents/skills/` expose les skills aux outils qui le lisent.
