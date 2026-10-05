@@ -16,7 +16,6 @@ Harness : `<chemin vers engineering-harness>/` (ex. `tools/engineering-harness/`
 | `STATE.md` | Etat courant et decisions actives |
 | `business-rules.md` | Regles metier |
 | `glossary.md` | Vocabulaire |
-| `schema.yaml` | Modele de donnees |
 | `debt.yaml` | Dette technique (optionnel) |
 
 ## Gouvernance

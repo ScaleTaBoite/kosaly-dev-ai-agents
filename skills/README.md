@@ -13,6 +13,17 @@ Une procedure = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
 
 Role canonique : `agents/architect.md`.
 
+## Base / base de donnees (implementees)
+
+| Skill | Role |
+|-------|------|
+| `schema-exploration/` | Explorer le repo et reconstruire le modele |
+| `catalyst-export/` | Exploiter l'export JSON Catalyst |
+| `db-analysis/` | Grille d'analyse et severites |
+| `db-docs/` | Modeles des fichiers de `base-docs/db/` |
+
+Agent : `agents/database_expert.md`.
+
 ## A venir (hors perimetre actuel)
 
 - `write-adr/`

@@ -1,5 +1,6 @@
 ---
 name: base
+docs: base-docs
 description: Base, l'agent expert en architecture de bases de données (relationnelles, NoSQL, Zoho Catalyst). Conçoit le modèle d'un nouveau projet, audite une base existante, ou analyse l'impact d'une fonctionnalité sur le schéma. Documente tout dans .kagents/docs/base-docs/db/ et n'applique jamais de changement sans validation.
 ---
 

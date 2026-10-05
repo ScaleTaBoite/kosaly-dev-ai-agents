@@ -1,6 +1,6 @@
 # ScaleTaBoite Engineering Harness
 
-Socle interne versionne pour faire travailler des agents IA (Cursor, Claude Code, etc.) de maniere coherente sur plusieurs projets.
+KAgents : kit d'agents IA d'ingenierie, installable dans un projet (Claude Code, Cursor, tout outil lisant `AGENTS.md`) de maniere coherente sur plusieurs projets.
 
 Le **projet client** porte son etat et ses decisions (`STATE.md`, `schema.yaml`, ADR, etc.).  
 Ce repository fournit regles, skills, workflows, templates et garde-fous.
@@ -18,13 +18,21 @@ Ce repository fournit regles, skills, workflows, templates et garde-fous.
 | `templates/` | Formats a copier dans un repo projet |
 | `checklists/` | Controles de revue |
 | `scripts/` | Verifications deterministes |
-| `adapters/` | Integration par environnement (Cursor, etc.) |
+| `commands/` | Points d'entree : lancent un agent dans un mode |
+| `adapters/` | Integration par outil (`claude`, `cursor`, `agents`) |
+| `install.sh` | Installe le kit dans `.kagents/` d'un projet |
 | `docs/` | Documentation humaine |
 
 ## Version
 
 Voir `VERSION`. Tag semver sur `main` a chaque release du harness.
 
-## Consommation dans un projet
+## Installation dans un projet
 
-Voir [docs/consuming-the-harness.md](docs/consuming-the-harness.md) et [adapters/cursor/README.md](adapters/cursor/README.md).
+Depuis la racine du projet :
+
+```bash
+/chemin/vers/kosaly-dev-ai-agents/install.sh [agents,claude,cursor|auto]
+```
+
+Le kit est copie dans `.kagents/` (source unique) ; `.claude/`, `.cursor/` et `.agents/` ne contiennent que des liens relatifs (`KAGENTS_MODE=copy` pour des copies). Le bloc `<!-- kagents:start/end -->` de `AGENTS.md` est regenere. Voir [adapters/README.md](adapters/README.md).

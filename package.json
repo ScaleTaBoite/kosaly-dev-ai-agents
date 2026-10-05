@@ -1,0 +1,12 @@
+{
+  "name": "kagents",
+  "version": "0.1.0",
+  "description": "Kit d'agents IA d'ingenierie installable dans un projet (Claude Code, Cursor, AGENTS.md)",
+  "bin": { "kagents": "install.sh" },
+  "files": [
+    "install.sh", "adapters", "agents", "skills", "commands", "rules", "templates",
+    "standards", "checklists", "workflows", "governance", "VERSION"
+  ],
+  "license": "UNLICENSED",
+  "private": true
+}

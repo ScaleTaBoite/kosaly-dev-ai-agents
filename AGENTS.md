@@ -23,10 +23,12 @@ Respecter `governance/actions.yaml`. En cas de doute sur une action sensible, **
 | Role specialise | `agents/` |
 | Type de travail | `workflows/` + `workflows/impact-levels.yaml` |
 | Artefacts projet | `templates/project/` (a copier, pas a remplir ici) |
-| Cursor | `adapters/cursor/` |
+| Installation | `install.sh`, `adapters/<outil>/` |
+| Commandes | `commands/` (prefixe par agent : `base-*`) |
 
 ## Modifier ce repo
 
 - Ne pas dupliquer un standard entier dans `rules/` ou `AGENTS.md` : renvoyer vers `standards/`.
 - Nouvelle skill = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
-- Adapter Cursor = symlinks/copies via `adapters/cursor/install.sh`, pas de canon dans `.cursor/` a la racine.
+- Nouvel outil = dossier `adapters/<outil>/install.sh` s'appuyant sur `adapters/_lib.sh` (liens relatifs depuis `.kagents/`), pas de canon dans `.cursor/` ou `.claude/` a la racine.
+- Agent = frontmatter `name`, `docs` (espace `docs/<agent>-docs/`), `description` ; commande = frontmatter `description`, `agent`, `mode`, `triggers`.
