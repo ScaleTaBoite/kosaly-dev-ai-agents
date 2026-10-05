@@ -1,20 +1,21 @@
 # Skills
 
-Une procedure = un dossier avec `SKILL.md` (frontmatter `name`, `description`).
+## Architect / Spec (internes — pas des commandes publiques)
 
-## Architect / Spec (implementees)
+| Skill | Commande publique typique |
+|-------|---------------------------|
+| `architect-discovery/` | `kagents architect` |
+| `architect-audit/` | `kagents architect:audit`, `:impact`, `:spec` |
+| `architect-impact/` | `kagents architect:impact`, partie `:spec` |
+| `architect-write-output/` | toutes commandes avec livrable |
+| `architect-index/` | livrables + registre decisions |
+| `architect-status/` | `kagents architect:status` (read-only) |
+| `architect-decision/` | `kagents architect:decision` |
 
-| Skill | Role |
-|-------|------|
-| `feature-analysis/` | Demande feature ou modification fonctionnelle |
-| `audit-repository/` | Cartographie projet existant |
-| `architecture-impact/` | Impacts et niveau L0–L3 |
-| `write-change-brief/` | Change Brief dans le repo projet |
+Contrat commandes : `docs/architect-commands.md` — fichiers `commands/architect*.md`.
 
-Role canonique : `agents/architect.md`.
+Role : `agents/architect.md`.
 
-## A venir (hors perimetre actuel)
+## Base (Database Expert) — ne pas modifier ici
 
-- `write-adr/`
-- `catalyst-impact/` (analyse detaillee)
-- `init-project-artifacts/`
+`db-analysis/`, `db-docs/`, `schema-exploration/`, `catalyst-export/`.
