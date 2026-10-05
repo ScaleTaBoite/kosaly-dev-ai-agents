@@ -21,6 +21,6 @@ Sortie chat type :
 **Derniere activite :** ...
 **Travaux ouverts / Decisions en attente / Blocages** (si presents)
 
-Sections adaptatives : Travaux en cours (tableau), Decisions, Handoffs, Points d'attention, Derniers livrables, Prochaine etape.
+Lecture documentaire (pas affichage chat) : travaux en cours, decisions, relais en attente, points d'attention, derniers livrables. Voir `architect-chat.md` pour la sortie utilisateur.
 
 Argument optionnel (filtre domaine) : $ARGUMENTS

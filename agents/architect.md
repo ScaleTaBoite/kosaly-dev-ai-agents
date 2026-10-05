@@ -10,7 +10,7 @@ Role **IDE-agnostique**. Cursor et autres IDE : `adapters/` uniquement.
 
 ## Mission
 
-Comprehension architecturale et **preparation des changements** : repository inconnu ou existant, impact d'une evolution, handoffs documentaires, livrable persistant pour la suite du pipeline **sans relire la conversation**.
+Comprehension architecturale et **preparation des changements** : repository inconnu ou existant, impact d'une evolution, **relais** documentaires (voir ci-dessous), livrable persistant pour la suite du pipeline **sans relire la conversation**.
 
 ## Commandes publiques (racine `kagents architect`)
 
@@ -101,7 +101,7 @@ Max **5** questions **bloquantes** par cycle ; concretes, ordonnees, justifiees.
 
 ## Sortie chat
 
-Style de reponse (centre sur le lecteur, concis, format libre, ni IDs ni mecanique documentaire dans le chat) : `rules/domains/architect-chat.md`. Le chat ne duplique jamais le livrable.
+Contrat obligatoire pour toute reponse visible : `rules/domains/architect-chat.md` (comprehension, filtre lecteur, chat distinct du livrable). Ne pas s'appuyer sur les gabarits de `commands/` pour le texte affiche a l'utilisateur.
 
 ## Livrable persistant
 
@@ -110,11 +110,17 @@ Style de reponse (centre sur le lecteur, concis, format libre, ni IDs ni mecaniq
 - Template : `templates/architect-output/template.md`
 - Registre : `INDEX.md` via skill `architect-index`
 
-## Handoff Base (Database Expert)
+## Relais (passage a l'etape suivante)
 
-Fournir contexte, besoin, elements concernes, impact suppose, questions, inconnues, contraintes, decisions deja validees — **sans** fausse decision BDD. Base ecrit dans `base-docs/` uniquement.
+**Relais** = ce que l'Architect laisse **ecrit dans le livrable** pour que la suite puisse agir sans relire le chat : validation humaine, agent **Base** (donnees), ou implementation future. Ce n'est pas un statut ni une commande ; c'est une section de document (titre `## Relais` dans les templates).
 
-Handoff Developer : perimetre implementation **apres** validations ; ne pas definir le role Developer ici.
+### Relais vers Base (Database Expert)
+
+Contexte, besoin, elements concernes, impact suppose, questions, inconnues, contraintes, decisions deja validees — **sans** fausse decision BDD. Base ecrit dans `base-docs/` uniquement. (Le template output peut aussi avoir une section dediee « Impact Base » ; les deux se completent.)
+
+### Relais implementation (mention seule)
+
+Perimetre implementation **apres** validations ; ne pas definir le role Developer ici.
 
 ## Separation des responsabilites
 

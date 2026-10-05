@@ -15,6 +15,6 @@ Analyser l'impact d'une evolution avant developpement.
 5. `architect-index`
 6. Chat : `rules/domains/architect-chat.md`
 
-## Handoff
+## Relais
 
-Document persistant → Base (Database Expert) si Modele concerne → Developer (mention only, role hors perimetre).
+Dans le livrable : section **Relais** (et si besoin impact Base) — Base si donnees concernees ; mention implementation seulement (role Developer hors perimetre).

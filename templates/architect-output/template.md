@@ -78,9 +78,9 @@ Condition d'escalade : (optionnel)
 
 Ce que Base doit analyser — sans decision BDD de la part de l'Architect.
 
-## Handoff
+## Relais
 
-Informations pour l'etape suivante (Base, validation humaine, implementation future).
+Qui fait quoi ensuite : validation humaine, analyse Base (donnees), implementation — avec le contexte minimal pour agir sans relire le chat.
 
 ## Criteres de completude
 

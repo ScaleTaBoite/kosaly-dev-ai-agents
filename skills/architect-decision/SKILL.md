@@ -29,7 +29,7 @@ description: >-
 6. Renseigner metadonnees ; **Decideur : Humain** ; Statut **VALIDEE** par defaut.
 7. Lier **proposition d'origine** : chercher dans INDEX / dernier livrable pertinent (ex. finance marge v3) — ne pas modifier le livrable sauf ajout optionnel en **References** d'une ligne « Decision : DEC-XXX » en fin de fichier si deja ouvert pour edition ; preferer lien depuis decision vers output.
 8. Mettre a jour INDEX section **## Decisions (registre)** (ajouter ligne, ne pas reconstruire tout le fichier).
-9. Chat : confirmer le **contenu** de la decision, consequence principale, suite (`architect-chat.md` section 0 — pas d'IDs ni chemins sauf une ligne finale optionnelle). Documents : ID, statut, chemin, INDEX.
+9. Chat : `rules/domains/architect-chat.md` (contenu de la decision, consequence, suite). Documents : ID, statut, chemin, INDEX.
 
 ## Propositions
 
